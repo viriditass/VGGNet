@@ -16,11 +16,13 @@ transform = transforms.Compose([
 ])
 
 trainset = torchvision.datasets.STL10(root='./data', split='train', download=True, transform=transform)
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=64, shuffle=True)
+trainloader = torch.utils.data.DataLoader(trainset, shuffle=True)
+# trainloader = torch.utils.data.DataLoader(trainset, batch_size=64, shuffle=True)
+
 
 testset = torchvision.datasets.STL10(root='./data', split='test', download=True, transform=transform)
-testloader = torch.utils.data.DataLoader(testset, batch_size=64, shuffle=False)
-print(testloader)
+testloader = torch.utils.data.DataLoader(testset, shuffle=False)
+# testloader = torch.utils.data.DataLoader(testset, batch_size=64, shuffle=False)
 
 def imshow(img):
     # unnormalize
@@ -42,7 +44,7 @@ imshow(torchvision.utils.make_grid(images))
 file = open('./data/stl10_binary/class_names.txt', "r")
 classes = file.read().split()
 
-print(' '.join('%5s' % classes[labels[j]] for j in range(4)))
+print(' '.join('%5s' % classes[labels[0]]))
 
 
 ## directory setting
