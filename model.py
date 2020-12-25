@@ -3,23 +3,24 @@ import torch.nn as nn
 
 VGG_types = {
     # VGG11
-    "VGG-A": [64, "M", 128, "M", 256, 256, "M", 512, 512, "M", 512, 512, "M"],
+    'VGG-A': [64, 'M', 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M'],
     # VGG11 LRN
-    "VGG-A-LRN": [64, "L", "M", 128, "M", 256, 256, "M", 512, 512, "M", 512, 512, "M"],
+    'VGG-A-LRN': [64, 'L', 'M', 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M'],
     # VGG13
-    "VGG-B": [64, 64, "M", 128, 128, "M", 256, 256, "M", 512, 512, "M", 512, 512, "M"],
+    'VGG-B': [64, 64, 'M', 128, 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M'],
     # VGG16
-    "VGG-D": [64, 64, "M", 128, 128, "M", 256, 256, 256, "M", 512, 512, 512, "M", 512, 512, 512, "M"],
+    'VGG-D': [64, 64, 'M', 128, 128, 'M', 256, 256, 256, 'M', 512, 512, 512, 'M', 512, 512, 512, 'M'],
     # VGG19
-    "VGG-E": [64, 64, "M", 128, 128, "M", 256, 256, 256, 256, "M", 512, 512, 512, 512, "M", 512, 512, 512, 512, "M"],
+    'VGG-E': [64, 64, 'M', 128, 128, 'M', 256, 256, 256, 256, 'M', 512, 512, 512, 512, 'M', 512, 512, 512, 512, 'M'],
 }
 
 ## VGGNet
 class VGGNet(nn.Module):
-    def __init__(self, in_channels=3, num_classes=1000):
+    def __init__(self, in_channels=3, num_classes=10, VGG_type=VGG_types['VGG-A']):
         super(VGGNet, self).__init__()
+
         self.in_channels = in_channels
-        self.conv_layers = self.create_conv_layers(VGG_types["VGG-E"])
+        self.conv_layers = self.create_conv_layers(VGG_type)
 
         self.fc = nn.Sequential(
             nn.Linear(512 * 7 * 7, 4096),
@@ -60,10 +61,10 @@ class VGGNet(nn.Module):
 
                 in_channels = x
             # MaxPool
-            elif x == "M":
+            elif x == 'M':
                 layers += [nn.MaxPool2d(kernel_size=(2, 2), stride=(2, 2))]
             # Local Response Normalization
-            elif x == "L":
+            elif x == 'L':
                 layers += [nn.LocalResponseNorm(2)]
                 
         return nn.Sequential(*layers)
