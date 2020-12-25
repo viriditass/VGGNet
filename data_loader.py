@@ -28,17 +28,6 @@ class Dataset(torch.utils.data.Dataset):
         label = np.load(os.path.join(self.data_dir, self.lst_label[index]))
         input = np.load(os.path.join(self.data_dir, self.lst_input[index]))
 
-        label = label/255.0
-        input = input/255.0
-
-        if label.ndim == 2:
-            label = label[:, :, np.newaxis]
-        if input.ndim == 2:
-            input = input[:, :, np.newaxis]
-
         data = {'input': input, 'label': label}
-
-        if self.transform:
-            data = self.transform(data)
 
         return data
