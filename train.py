@@ -1,3 +1,5 @@
+import argparse
+
 import torch
 import torch.optim as optim
 import torch.nn as nn
@@ -10,15 +12,40 @@ from model import *
 from data_loader import *
 from util import *
 
+## Parser
+parser = argparse.ArgumentParser(description="Train the VGGNet",
+                                formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+parser.add_argument("--lr", default=0.00001, type=float, dest="lr")
+parser.add_argument("--batch_size", default=64, type=int, dest="batch_size")
+parser.add_argument("--num_epoch", default=100, type=int, dest="num_epoch")
+
+parser.add_argument("--data_dir", default="./data", type=str, dest="data_dir")
+parser.add_argument("--ckpt_dir", default="./checkpoint", type=str, dest="ckpt_dir")
+
+parser.add_argument("--mode", default="train", type=str, dest="mode")
+parser.add_argument("--train_continue", default="off", type=str, dest="train_continue")
+
+args = parser.parse_args()
+
+## training parameter setting
+lr = args.lr
+batch_size = args.batch_size
+num_epoch = args.num_epoch
+
+data_dir = args.data_dir
+ckpt_dir = args.ckpt_dir
+
+mode = args.mode
+train_continue = args.train_continue
+
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
 file = open('./data/stl10_binary/class_names.txt', "r")
 classes = file.read().split()
 
 print(classes)
 
-data_dir = './data'
-batch_size = 64
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-mode = 'train'
 
 ## Train
 if mode == 'train':
@@ -56,12 +83,9 @@ net = VGGNet(in_channels=3, num_classes=len(classes), VGG_type=VGG_types['VGG-D'
 fn_loss = nn.CrossEntropyLoss().to(device)
 
 # optimizer
-optim = torch.optim.Adam(net.parameters(),lr=0.00001)
+optim = torch.optim.Adam(net.parameters(),lr=lr)
 
 st_epoch = 0
-num_epoch = 50
-ckpt_dir = './checkpoint'
-train_continue = 'on'
 
 # TRAIN MODE
 if mode == 'train':
